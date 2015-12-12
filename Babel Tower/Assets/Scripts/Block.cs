@@ -4,27 +4,27 @@ using System.Collections;
 public class Block : MonoBehaviour {
 
     public enum BlockType: int {
-        Zero = 0,
+        NullBlock = -1,
         Water,
         Food,
         Wood,
         NumerOfBlockTypes
     };
 
-    public BlockType blockType = BlockType.Zero;
+    public BlockType blockType = BlockType.NullBlock;
 
     // Use this for initialization
     void Start () {
 
         // TODO: temp
-        switch(Random.Range(System.Convert.ToInt32(BlockType.Zero) +1, System.Convert.ToInt32(BlockType.NumerOfBlockTypes))) {
-            case 1:
+        switch(Random.Range(System.Convert.ToInt32(BlockType.NullBlock) +1, System.Convert.ToInt32(BlockType.NumerOfBlockTypes))) {
+            case 0:
                 blockType = BlockType.Water;
                 break;
-            case 2:
+            case 1:
                 blockType = BlockType.Food;
                 break;
-            case 3:
+            case 2:
                 blockType = BlockType.Wood;
                 break;
         }

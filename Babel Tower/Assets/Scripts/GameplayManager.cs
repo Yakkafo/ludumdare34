@@ -21,7 +21,13 @@ public class GameplayManager : MonoBehaviour {
     private int selectedBlock = 0;
     private const int MAX_PROPOSED_BLOCKS = 3;
 
+    // GUI
+    public Texture2D[] texturesUnfocusedButtons;
+    public Texture2D[] texturesFocusedButtons;
+    private Rect topRect;
+
 	void Start () {
+        topRect = new Rect(10, 10, 64, 64);
         proposedBlocks = new List<Block.BlockType>();
         ResetHand();
     }
@@ -54,13 +60,20 @@ public class GameplayManager : MonoBehaviour {
     private void ResetHand() {
         proposedBlocks.Clear();
         for (int i = 0; i < MAX_PROPOSED_BLOCKS; i++) {
-            int random = Random.Range(1, System.Convert.ToInt32((Block.BlockType.NumerOfBlockTypes)));
+            int random = Random.Range(0, System.Convert.ToInt32((Block.BlockType.NumerOfBlockTypes)));
             proposedBlocks.Add((Block.BlockType)random);
         }
     }
 
     void OnGUI() {
-        GUI.Label(new Rect(10, 10, 100, 20), proposedBlocks[selectedBlock].ToString());
+        Rect currentButtonRect = new Rect(topRect);
+        for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
+            if(i == selectedBlock)
+                GUI.Box(currentButtonRect, texturesFocusedButtons[System.Convert.ToInt32(proposedBlocks[i])]);
+            else
+                GUI.Box(currentButtonRect, texturesUnfocusedButtons[System.Convert.ToInt32(proposedBlocks[i])]);
+            currentButtonRect.y += 70;
+        }
     }
     
 }
