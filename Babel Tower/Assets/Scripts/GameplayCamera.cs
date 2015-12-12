@@ -50,12 +50,14 @@ public class GameplayCamera : MonoBehaviour {
 	void Update () {
         switch(currentState) {
             case CameraState.MoveTo:
+                // Rotation de la caméra
                 if (remainingDegrees > 0f) {
                     angularSpeed = Mathf.Lerp(angularSpeed, MIN_ANGULAR_SPEED, ANGULAR_ACCELERATION * Time.deltaTime);
                     transform.RotateAround(target, Vector3.up, -angularSpeed * Time.deltaTime);
                     remainingDegrees -= angularSpeed * Time.deltaTime;
                     remainingDegrees = remainingDegrees < 0f ? 0f : remainingDegrees;
                 }
+                // Translation verticale de la caméra
                 if (remainingHeigh > 0f) {
                     verticalSpeed = Mathf.Lerp(verticalSpeed, MIN_VERTICAL_SPEED, VERTICAL_ACCELERATION * Time.deltaTime);
                     float distance = verticalSpeed * Time.deltaTime;
