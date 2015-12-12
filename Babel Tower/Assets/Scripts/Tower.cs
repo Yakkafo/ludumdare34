@@ -24,9 +24,11 @@ public class Tower : MonoBehaviour {
 	}
 
     public void CreateNextBlockAtID(int _spotID, Block.BlockType _type) {
-        Block block = Instantiate(blockModel, IDToGameplayPosition(_spotID), Quaternion.identity) as Block;
+        Block block = Instantiate(blockModel, GetGameplayPosition(_spotID), Quaternion.identity) as Block;
         block.ChangeType(_type);
         towerSpots[_spotID].containedBlock = block;
+
+        block.name = block.blockType.ToString() + " " + GetGameplayPosition(_spotID).ToString();
     }
 
     // Trouve l'id du prochain spot suivant l'ordre logique (qu'il soit vide ou non)
@@ -60,11 +62,11 @@ public class Tower : MonoBehaviour {
             }
         }
 
-        return GameplayPositionToID(nextGameplayPosition);
+        return GetSpotID(nextGameplayPosition);
     }
 
     // Renvoie l'id d'un spot suivant sa gameplayPosition
-    public int GameplayPositionToID(Vector3 _gameplayPosition) {
+    public int GetSpotID(Vector3 _gameplayPosition) {
         foreach(Spot spot in towerSpots) {
             if (spot.gameplayPosition == _gameplayPosition)
                 return spot.id;
@@ -73,20 +75,55 @@ public class Tower : MonoBehaviour {
     }
 
     // Renvoie la gameplayPosition d'un spot suivant son id
-    public Vector3 IDToGameplayPosition(int _id) {
+    public Vector3 GetGameplayPosition(int _id) {
         return towerSpots[_id].gameplayPosition;
     }
 
     // Retourne un spot via l'id
-    public Spot SpotFromID(int _id) {
-        if (_id < towerSpots.Count)
+    public Spot GetSpot(int _id) {
+        if (_id < towerSpots.Count && _id >= 0)
             return towerSpots[_id];
         else
             return null;
     }
 
-    public Block BlockByID(int _id) {
-        return SpotFromID(_id).containedBlock;
+    public Block GetBlock(int _id) {
+        Spot spot = GetSpot(_id);
+        if(spot != null)
+            return spot.containedBlock;
+        else
+            return null;
     }
-    
+
+    public Block GetBlock(Vector3 _gameplayPosition) {
+        return GetBlock(GetSpotID(_gameplayPosition));
+    }
+
+    // G�n�re la liste des voisins
+    public List<Block> GetNeighborhood(int _id) {
+        List<Block> neighborhood = new List<Block>();
+        Vector3 blockPosition = GetGameplayPosition(_id);
+        Block block;
+
+        block = GetBlock(blockPosition + Vector3.up);
+        if(block != null) neighborhood.Add(block);
+
+        block = GetBlock(blockPosition + Vector3.down);
+        if (block != null) neighborhood.Add(block);
+
+        block = GetBlock(blockPosition + Vector3.right);
+        if (block != null) neighborhood.Add(block);
+
+        block = GetBlock(blockPosition + Vector3.left);
+        if (block != null) neighborhood.Add(block);
+
+        block = GetBlock(blockPosition - Vector3.right);
+        if (block != null) neighborhood.Add(block);
+
+        block = GetBlock(blockPosition - Vector3.left);
+        if (block != null) neighborhood.Add(block);
+
+        return neighborhood;
+    }
+
 }

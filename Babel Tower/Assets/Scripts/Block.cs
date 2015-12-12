@@ -27,6 +27,7 @@ public class Block : MonoBehaviour {
     public List<ResourceType> producedResources;
     public List<ResourceType> usedResources;
     public int producedScience = 0;
+    public int producedMoney = 0;
     public string descriptionText = "";
     public bool active = false;
 
@@ -91,11 +92,13 @@ public class Block : MonoBehaviour {
                 rend.material.SetColor("_Color", Color.magenta);
                 usedResources.Add(ResourceType.Water);
                 descriptionText = "GreasySpoon";
+                producedMoney = 1;
                 break;
             case BlockType.Workshop:
                 rend.material.SetColor("_Color", Color.yellow);
                 usedResources.Add(ResourceType.Electricity);
                 descriptionText = "Workshop";
+                producedMoney = 1;
                 break;
             default:
                 rend.material.SetColor("_Color", Color.black);
@@ -103,11 +106,11 @@ public class Block : MonoBehaviour {
         }
     }
 
-    public static BlockType GetBlockTypeFromInt(int _i) {
+    public static BlockType GetBlockType(int _i) {
         return (BlockType)_i;
     }
 
-    public static int GetIntfromBlockType(BlockType _type) {
+    public static int GetBlockTypeID(BlockType _type) {
         return System.Convert.ToInt32(_type);
     }
 }

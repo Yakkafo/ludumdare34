@@ -12,7 +12,6 @@ public class GameplayCamera : MonoBehaviour {
 
     public Vector3 target;
     public CameraState currentState = CameraState.HoldPosition;
-    private Camera thisCamera;
 
     // Mouvements angulaires
     private const float ANGLE = 90f;
@@ -34,7 +33,6 @@ public class GameplayCamera : MonoBehaviour {
         initialHeigh = transform.position.y;
         target = new Vector3(0.5f, initialHeigh, 0.5f);
         remainingDegrees = ANGLE;
-        thisCamera = GetComponent<Camera>();
         ResetSpeeds();
     }
 

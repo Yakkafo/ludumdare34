@@ -16,6 +16,10 @@ public class GameplayManager : MonoBehaviour {
     public GameplayCamera gameplayCamera;
     private int currentSpotID = 0;
 
+    // Gameplay
+    public int playerScience = 0;
+    public int playerMoney = 0;
+
     // Choisir un block
     private List<Block.BlockType> proposedBlocks;
     private int selectedBlock = 0;
@@ -42,13 +46,27 @@ public class GameplayManager : MonoBehaviour {
                     if (gameplayCamera.currentState != GameplayCamera.CameraState.MoveTo) {
                         tower.CreateNextBlockAtID(currentSpotID, proposedBlocks[selectedBlock]);
                         currentSpotID = tower.NextNeighbourID(currentSpotID);
-                        gameplayCamera.target.y = tower.IDToGameplayPosition(currentSpotID).y + gameplayCamera.initialHeigh;
+                        gameplayCamera.target.y = tower.GetGameplayPosition(currentSpotID).y + gameplayCamera.initialHeigh;
                         gameplayCamera.MoveToNextTarget();
                         currentGameplaystate = GameplayState.TurnTransition;
                     }
                 }
                 break;
-            case GameplayState.TurnTransition: // G�n�ration d'une nouvelle main de blocks
+            case GameplayState.TurnTransition: // G�n�ration d'une nouvelle main de blocks et calcule des gains
+                int totalScience = 0;
+                foreach(Spot spot in tower.towerSpots) {
+                    if(spot.containedBlock != null) {
+                        List<Block> neighborhood = tower.GetNeighborhood(spot.id);
+                        spot.containedBlock.CheckActivity(neighborhood);
+                        if (spot.containedBlock.active) {
+                            Debug.Log(spot.containedBlock.ToString() + "IS ACTIVE");
+                            playerMoney += spot.containedBlock.producedMoney;
+                            totalScience += spot.containedBlock.producedScience;
+                        }
+                    }
+                }
+                playerScience = totalScience;
+
                 currentGameplaystate = GameplayState.BlockSelection;
                 ResetHand();
                 break;
@@ -60,7 +78,7 @@ public class GameplayManager : MonoBehaviour {
     private void ResetHand() {
         proposedBlocks.Clear();
         for (int i = 0; i < MAX_PROPOSED_BLOCKS; i++) {
-            int random = Random.Range(0, Block.GetIntfromBlockType(Block.BlockType.NumerOfBlockTypes));
+            int random = Random.Range(0, Block.GetBlockTypeID(Block.BlockType.NumerOfBlockTypes));
             proposedBlocks.Add((Block.BlockType)random);
         }
     }
@@ -69,9 +87,9 @@ public class GameplayManager : MonoBehaviour {
         Rect currentButtonRect = new Rect(topRect);
         for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
             if(i == selectedBlock)
-                GUI.Box(currentButtonRect, texturesFocusedButtons[Block.GetIntfromBlockType(proposedBlocks[i])]);
+                GUI.Box(currentButtonRect, texturesFocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
             else
-                GUI.Box(currentButtonRect, texturesUnfocusedButtons[Block.GetIntfromBlockType(proposedBlocks[i])]);
+                GUI.Box(currentButtonRect, texturesUnfocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
             currentButtonRect.y += 70;
         }
     }
