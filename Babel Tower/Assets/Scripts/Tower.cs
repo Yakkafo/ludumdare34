@@ -75,5 +75,13 @@ public class Tower : MonoBehaviour {
     public Vector3 IDToGameplayPosition(int _id) {
         return towerSpots[_id].gameplayPosition;
     }
+
+    // Retourne un spot via l'id
+    public Spot SpotFromID(int _id) {
+        if (_id < towerSpots.Count)
+            return towerSpots[_id];
+        else
+            return null;
+    }
     
 }
