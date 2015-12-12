@@ -5,9 +5,12 @@ public class Block : MonoBehaviour {
 
     public enum BlockType: int {
         NullBlock = -1,
-        Water,
-        Food,
-        Wood,
+        Cistern,
+        Generator,
+        Slum,
+        School,
+        GreasySpoon,
+        Workshop,
         NumerOfBlockTypes
     };
 
@@ -30,14 +33,23 @@ public class Block : MonoBehaviour {
         Renderer rend = GetComponent<Renderer>();
         rend.material.shader = Shader.Find("Specular");
         switch (blockType) {
-            case BlockType.Food:
+            case BlockType.Generator:
                 rend.material.SetColor("_Color", Color.red);
                 break;
-            case BlockType.Water:
+            case BlockType.Cistern:
                 rend.material.SetColor("_Color", Color.blue);
                 break;
-            case BlockType.Wood:
+            case BlockType.Slum:
                 rend.material.SetColor("_Color", Color.gray);
+                break;
+            case BlockType.School:
+                rend.material.SetColor("_Color", Color.green);
+                break;
+            case BlockType.GreasySpoon:
+                rend.material.SetColor("_Color", Color.magenta);
+                break;
+            case BlockType.Workshop:
+                rend.material.SetColor("_Color", Color.yellow);
                 break;
             default:
                 rend.material.SetColor("_Color", Color.black);
