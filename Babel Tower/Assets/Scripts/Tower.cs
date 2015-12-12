@@ -23,9 +23,10 @@ public class Tower : MonoBehaviour {
 	
 	}
 
-    public void CreateNextBlockAtID(int _id) {
-        if (blockModel != null)
-            Instantiate(blockModel, IDToGameplayPosition(_id), Quaternion.identity);
+    public void CreateNextBlockAtID(int _spotID, Block.BlockType _type) {
+        Block block = Instantiate(blockModel, IDToGameplayPosition(_spotID), Quaternion.identity) as Block;
+        block.ChangeType(_type);
+        towerSpots[_spotID].containedBlock = block;
     }
 
     // Trouve l'id du prochain spot suivant l'ordre logique (qu'il soit vide ou non)
@@ -82,6 +83,10 @@ public class Tower : MonoBehaviour {
             return towerSpots[_id];
         else
             return null;
+    }
+
+    public Block BlockByID(int _id) {
+        return SpotFromID(_id).containedBlock;
     }
     
 }

@@ -16,19 +16,17 @@ public class Block : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        // TODO: temp
-        switch(Random.Range(System.Convert.ToInt32(BlockType.NullBlock) +1, System.Convert.ToInt32(BlockType.NumerOfBlockTypes))) {
-            case 0:
-                blockType = BlockType.Water;
-                break;
-            case 1:
-                blockType = BlockType.Food;
-                break;
-            case 2:
-                blockType = BlockType.Wood;
-                break;
-        }
+        
+    }
+	
+	// Update is called once per frame
+	void Update () {
+        
+	
+	}
 
+    public void ChangeType(BlockType _type) {
+        blockType = _type;
         Renderer rend = GetComponent<Renderer>();
         rend.material.shader = Shader.Find("Specular");
         switch (blockType) {
@@ -46,10 +44,12 @@ public class Block : MonoBehaviour {
                 break;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-        
-	
-	}
+
+    public static BlockType GetBlockTypeFromInt(int _i) {
+        return (BlockType)_i;
+    }
+
+    public static int GetIntfromBlockType(BlockType _type) {
+        return System.Convert.ToInt32(_type);
+    }
 }

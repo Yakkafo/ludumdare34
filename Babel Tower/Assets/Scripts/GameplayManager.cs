@@ -40,7 +40,7 @@ public class GameplayManager : MonoBehaviour {
                 }
                 else if (Input.GetKeyDown(KeyCode.Space)) {
                     if (gameplayCamera.currentState != GameplayCamera.CameraState.MoveTo) {
-                        tower.CreateNextBlockAtID(currentSpotID);
+                        tower.CreateNextBlockAtID(currentSpotID, proposedBlocks[selectedBlock]);
                         currentSpotID = tower.NextNeighbourID(currentSpotID);
                         gameplayCamera.target.y = tower.IDToGameplayPosition(currentSpotID).y + gameplayCamera.initialHeigh;
                         gameplayCamera.MoveToNextTarget();
@@ -60,7 +60,7 @@ public class GameplayManager : MonoBehaviour {
     private void ResetHand() {
         proposedBlocks.Clear();
         for (int i = 0; i < MAX_PROPOSED_BLOCKS; i++) {
-            int random = Random.Range(0, System.Convert.ToInt32((Block.BlockType.NumerOfBlockTypes)));
+            int random = Random.Range(0, Block.GetIntfromBlockType(Block.BlockType.NumerOfBlockTypes));
             proposedBlocks.Add((Block.BlockType)random);
         }
     }
@@ -69,9 +69,9 @@ public class GameplayManager : MonoBehaviour {
         Rect currentButtonRect = new Rect(topRect);
         for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
             if(i == selectedBlock)
-                GUI.Box(currentButtonRect, texturesFocusedButtons[System.Convert.ToInt32(proposedBlocks[i])]);
+                GUI.Box(currentButtonRect, texturesFocusedButtons[Block.GetIntfromBlockType(proposedBlocks[i])]);
             else
-                GUI.Box(currentButtonRect, texturesUnfocusedButtons[System.Convert.ToInt32(proposedBlocks[i])]);
+                GUI.Box(currentButtonRect, texturesUnfocusedButtons[Block.GetIntfromBlockType(proposedBlocks[i])]);
             currentButtonRect.y += 70;
         }
     }
