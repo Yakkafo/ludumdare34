@@ -7,8 +7,7 @@ public class Tower : MonoBehaviour {
     public List<Spot> towerSpots;
     public const int MAX_HEIGHT = 8;
     public Block blockModel;
-
-	// Use this for initialization
+    
 	void Start () {
         towerSpots = new List<Spot>();
 

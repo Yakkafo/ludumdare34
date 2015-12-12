@@ -59,7 +59,7 @@ public class GameplayManager : MonoBehaviour {
                         List<Block> neighborhood = tower.GetNeighborhood(spot.id);
                         spot.containedBlock.CheckActivity(neighborhood);
                         if (spot.containedBlock.active) {
-                            Debug.Log(spot.containedBlock.ToString() + "IS ACTIVE");
+                            Debug.Log(spot.containedBlock.name + " is active.");
                             playerMoney += spot.containedBlock.producedMoney;
                             totalScience += spot.containedBlock.producedScience;
                         }

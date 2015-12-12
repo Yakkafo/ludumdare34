@@ -32,7 +32,7 @@ public class Block : MonoBehaviour {
     public bool active = false;
 
     
-    void Start () {
+    void Awake () {
         producedResources = new List<ResourceType>();
         usedResources = new List<ResourceType>();
     }
@@ -43,22 +43,24 @@ public class Block : MonoBehaviour {
 	
 	}
 
-    public void CheckActivity(List<Block> _neighborood) {
+    public void CheckActivity(List<Block> _neighborhood) {
         bool oneMissing = false;
         foreach (ResourceType used in usedResources) {
             bool isSatisfied = false;
-            foreach (Block neighbor in _neighborood) {
+            foreach (Block neighbor in _neighborhood) {
                 foreach (ResourceType produced in neighbor.producedResources) {
                     if (produced == used) {
                         isSatisfied = true;
                         break;
                     }
                 }
-                if (isSatisfied)
+                if (isSatisfied) 
                     break;
             }
-            if (oneMissing)
+            if (!isSatisfied) {
+                oneMissing = true;
                 break;
+            }
         }
         active = !oneMissing;
     }
@@ -85,6 +87,7 @@ public class Block : MonoBehaviour {
                 break;
             case BlockType.School:
                 rend.material.SetColor("_Color", Color.green);
+                usedResources.Add(ResourceType.People);
                 producedScience = 1;
                 descriptionText = "School";
                 break;
