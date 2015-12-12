@@ -6,6 +6,7 @@ public class Tower : MonoBehaviour {
 
     public List<Spot> towerSpots;
     public const int MAX_HEIGHT = 8;
+    public Block blockModel;
 
 	// Use this for initialization
 	void Start () {
@@ -14,12 +15,9 @@ public class Tower : MonoBehaviour {
         for (int i = 0; i < MAX_HEIGHT * 4; i++) {
             Spot spot = new Spot(i);
             towerSpots.Add(spot);
+            if (blockModel != null)
+                Instantiate(blockModel, spot.gameplayPosition, Quaternion.identity);
         }
-        for(int i = 0; i < 8; i++)
-        {
-            Debug.Log(towerSpots[i].gameplayPosition + " has for neighbourg " + IDToGameplayPosition(NextNeighbourID(towerSpots[i])));
-        }
-        
     }
 
     // Update is called once per frame
@@ -27,17 +25,25 @@ public class Tower : MonoBehaviour {
 	
 	}
 
-    public int NextNeighbourID(int _currentID) {
+    public void DebugGameplay() {
+        for (int i = 0; i < 8; i++) {
+            Debug.Log(towerSpots[i].gameplayPosition + " has for neighbourg " + IDToGameplayPosition(NextNeighbourID(towerSpots[i])));
+        }
+    }
+
+    // Trouve l'id du prochain spot suivant l'ordre logique (qu'il soit vide ou non)
+    public int NextNeighbourID(int _currentID)
+    {
         return NextNeighbourID(towerSpots[_currentID]);
     }
 
     public int NextNeighbourID(Spot _currentSpot) {
         Vector3 nextGameplayPosition = _currentSpot.gameplayPosition;
-        if (nextGameplayPosition.y == 1) {
+        if (nextGameplayPosition.z == 1) {
             switch ((int) nextGameplayPosition.x) {
                 case 0:
                     nextGameplayPosition.x = nextGameplayPosition.y = 0;
-                    nextGameplayPosition.z++;
+                    nextGameplayPosition.y++;
                     break;
                 case 1:
                     nextGameplayPosition.x--;
@@ -51,7 +57,7 @@ public class Tower : MonoBehaviour {
                     nextGameplayPosition.x ++;
                     break;
                 case 1:
-                    nextGameplayPosition.y ++;
+                    nextGameplayPosition.z ++;
                     break;
             }
         }
@@ -59,6 +65,7 @@ public class Tower : MonoBehaviour {
         return GameplayPositionToID(nextGameplayPosition);
     }
 
+    // Renvoie l'id d'un spot suivant sa gameplayPosition
     public int GameplayPositionToID(Vector3 _gameplayPosition) {
         foreach(Spot spot in towerSpots) {
             if (spot.gameplayPosition == _gameplayPosition)
@@ -67,6 +74,7 @@ public class Tower : MonoBehaviour {
         return -1;
     }
 
+    // Renvoie la gameplayPosition d'un spot suivant son id
     public Vector3 IDToGameplayPosition(int _id) {
         return towerSpots[_id].gameplayPosition;
     }

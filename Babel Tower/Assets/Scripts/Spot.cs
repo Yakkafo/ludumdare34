@@ -16,8 +16,8 @@ public class Spot
     public void ComputeTowerPosition() {
         int modulo = id % 4;
         gameplayPosition.x = modulo % 2;
-        gameplayPosition.y = modulo / 2;
-        gameplayPosition.z = id / 4;
+        gameplayPosition.z = modulo / 2;
+        gameplayPosition.y = id / 4;
     }
     
     public bool ContainsBlock()
