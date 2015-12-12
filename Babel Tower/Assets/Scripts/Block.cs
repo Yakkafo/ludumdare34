@@ -12,8 +12,6 @@ public class Block : MonoBehaviour {
 
     public BlockType blockType = BlockType.Null;
 
-    private Material material;
-
     // Use this for initialization
     void Start () {
 

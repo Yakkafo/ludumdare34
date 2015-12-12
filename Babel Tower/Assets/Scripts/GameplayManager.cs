@@ -16,7 +16,8 @@ public class GameplayManager : MonoBehaviour {
             if (gameplayCamera.currentState != GameplayCamera.CameraState.MoveTo) {
                 tower.CreateNextBlockAtID(currentSpotID);
                 currentSpotID = tower.NextNeighbourID(currentSpotID);
-                gameplayCamera.MoveToNextTarget(tower.SpotFromID(currentSpotID).gameplayPosition);
+                gameplayCamera.target.y = tower.IDToGameplayPosition(currentSpotID).y + gameplayCamera.initialHeigh;
+                gameplayCamera.MoveToNextTarget();
             }
         }
 	}
