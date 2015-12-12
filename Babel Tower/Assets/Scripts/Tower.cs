@@ -9,10 +9,12 @@ public class Tower : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	    for(int i = 0; i < MAX_HEIGHT; i++) {
-            Spot spot = new Spot();
-            towerSpots.Add(spot);
+        towerSpots = new List<Spot>();
 
+        for (int i = 0; i < MAX_HEIGHT * 4; i++) {
+            Spot spot = new Spot(i);
+            towerSpots.Add(spot);
+            Debug.Log(spot);
         }
 	}
 	

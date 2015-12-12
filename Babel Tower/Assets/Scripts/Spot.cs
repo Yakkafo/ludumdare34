@@ -2,19 +2,31 @@
 using System.Collections;
 using System;
 
-public class Spot : MonoBehaviour
+public class Spot
 {
 
     public Block containedBlock;
-    public Vector2 towerPosition;
+    public Vector3 gameplayPosition;
+    public int id = 0;
     
-    // Use this for initialization
-    void Start () {
-	    
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public Spot(int _id) {
+        id = _id;
+        computeTowerPosition();
+    }
+
+    public void computeTowerPosition() {
+        int modulo = id % 4;
+        gameplayPosition.x = modulo % 2;
+        gameplayPosition.y = modulo / 2;
+        gameplayPosition.z = id / 4;
+    }
+
+    public int nextNeighbourgID() {
+        return 0;
+    }
+
+    public override string ToString()
+    {
+        return "Spot "+ id + ": " + gameplayPosition;
+    }
 }
