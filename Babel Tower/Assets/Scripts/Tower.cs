@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -15,8 +15,6 @@ public class Tower : MonoBehaviour {
         for (int i = 0; i < MAX_HEIGHT * 4; i++) {
             Spot spot = new Spot(i);
             towerSpots.Add(spot);
-            if (blockModel != null)
-                Instantiate(blockModel, spot.gameplayPosition, Quaternion.identity);
         }
     }
 
@@ -25,10 +23,9 @@ public class Tower : MonoBehaviour {
 	
 	}
 
-    public void DebugGameplay() {
-        for (int i = 0; i < 8; i++) {
-            Debug.Log(towerSpots[i].gameplayPosition + " has for neighbourg " + IDToGameplayPosition(NextNeighbourID(towerSpots[i])));
-        }
+    public void CreateNextBlockAtID(int _id) {
+        if (blockModel != null)
+            Instantiate(blockModel, IDToGameplayPosition(_id), Quaternion.identity);
     }
 
     // Trouve l'id du prochain spot suivant l'ordre logique (qu'il soit vide ou non)
@@ -42,7 +39,7 @@ public class Tower : MonoBehaviour {
         if (nextGameplayPosition.z == 1) {
             switch ((int) nextGameplayPosition.x) {
                 case 0:
-                    nextGameplayPosition.x = nextGameplayPosition.y = 0;
+                    nextGameplayPosition.x = nextGameplayPosition.z = 0;
                     nextGameplayPosition.y++;
                     break;
                 case 1:
@@ -78,4 +75,5 @@ public class Tower : MonoBehaviour {
     public Vector3 IDToGameplayPosition(int _id) {
         return towerSpots[_id].gameplayPosition;
     }
+    
 }
