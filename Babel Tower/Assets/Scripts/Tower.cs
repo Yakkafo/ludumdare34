@@ -116,10 +116,10 @@ public class Tower : MonoBehaviour {
         block = GetBlock(blockPosition + Vector3.left);
         if (block != null) neighborhood.Add(block);
 
-        block = GetBlock(blockPosition - Vector3.right);
+        block = GetBlock(blockPosition + Vector3.forward);
         if (block != null) neighborhood.Add(block);
 
-        block = GetBlock(blockPosition - Vector3.left);
+        block = GetBlock(blockPosition + Vector3.back);
         if (block != null) neighborhood.Add(block);
 
         return neighborhood;
