@@ -19,6 +19,7 @@ public class GameplayManager : MonoBehaviour {
     // Gameplay
     public int playerScience = 0;
     public int playerMoney = 0;
+    public int playerRevenue = 0;
 
     // Choisir un block
     private List<Block.BlockType> proposedBlocks;
@@ -26,14 +27,12 @@ public class GameplayManager : MonoBehaviour {
     private const int MAX_PROPOSED_BLOCKS = 3;
 
     // GUI
-    public GUISkin guiSkin;
+    public GUISkin boxSkin;
+    public GUISkin longTextSkin;
     public Texture2D[] texturesUnfocusedButtons;
     public Texture2D[] texturesFocusedButtons;
-    public Texture2D textureLabel;
-    private Rect topRect;
 
 	void Start () {
-        topRect = new Rect(10, 10, 64, 64);
         proposedBlocks = new List<Block.BlockType>();
         ResetHand();
     }
@@ -57,12 +56,13 @@ public class GameplayManager : MonoBehaviour {
                 break;
             case GameplayState.TurnTransition: // Génération d'une nouvelle main de blocks et calcule des gains
                 int totalScience = 0;
-                foreach(Spot spot in tower.towerSpots) {
+                playerRevenue = 0;
+                foreach (Spot spot in tower.towerSpots) {
                     if(spot.containedBlock != null) {
                         List<Block> neighborhood = tower.GetNeighborhood(spot.id);
                         spot.containedBlock.CheckActivity(neighborhood);
                         if (spot.containedBlock.active) {
-                            playerMoney += spot.containedBlock.producedMoney;
+                            playerRevenue += spot.containedBlock.producedMoney;
                             if(spot.containedBlock.producedMoney > 0) {
                                 //spot.containedBlock.GetComponent<ParticleSystem>().Play();
                             }
@@ -71,7 +71,7 @@ public class GameplayManager : MonoBehaviour {
                     }
                 }
                 playerScience = totalScience;
-
+                playerMoney += playerRevenue;
                 currentGameplaystate = GameplayState.BlockSelection;
                 ResetHand();
                 break;
@@ -89,19 +89,34 @@ public class GameplayManager : MonoBehaviour {
     }
 
     void OnGUI() {
-        GUI.skin = guiSkin;
-        Rect labelRect = new Rect(Screen.width / 2 - 100, 10, 200, 60);
-        GUI.Box(labelRect, "Money: " + playerMoney);
-        labelRect.y += 62;
-        GUI.Box(labelRect, "Science: " + playerScience);
-        Rect currentButtonRect = new Rect(topRect);
+        int margin = (Screen.width / 2) - 400;
+        int buttonSize = 100;
+        GUI.skin = boxSkin;
+
+        Rect boxRect = new Rect(margin + buttonSize + 2, 10, 250, 60);
+        GUI.Box(boxRect, "Money: " + playerMoney + "HK$");
+        boxRect.x += boxRect.width + 2;
+        GUI.Box(boxRect, "Income: +" + playerRevenue + "HK$");
+        boxRect.x += boxRect.width + 2;
+        boxRect.width = 150;
+        GUI.Box(boxRect, "Level: " + playerScience);
+        boxRect.x = margin;
+        boxRect.y = boxRect.height + 12;
+        boxRect.width = boxRect.height = buttonSize;
         for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
-            currentButtonRect.y += 70;
-            if(i == selectedBlock)
-                GUI.Box(currentButtonRect, texturesFocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
+            if (i == selectedBlock) {
+                GUI.skin = boxSkin;
+                GUI.Box(boxRect, texturesFocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
+                boxRect.x += boxRect.width + 2;
+                boxRect.width = 300;
+                GUI.skin = longTextSkin;
+                GUI.Box(boxRect, Block.GetDescription(proposedBlocks[i]));
+                boxRect.width = buttonSize;
+                boxRect.x -= boxRect.width + 2;
+            }
             else
-                GUI.Box(currentButtonRect, texturesUnfocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
-            
+                GUI.Box(boxRect, texturesUnfocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
+            boxRect.y += boxRect.height + 2;
         }
     }
     

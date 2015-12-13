@@ -92,40 +92,35 @@ public class Block : MonoBehaviour {
             case BlockType.Generator:
                 inactiveColor = ConvertHexaToUnityRGB(251, 249, 184);
                 producedResources.Add(ResourceType.Electricity);
-                descriptionText = "Generator";
                 break;
             case BlockType.Cistern:
                 inactiveColor = ConvertHexaToUnityRGB(215, 180, 240);
                 producedResources.Add(ResourceType.Water);
-                descriptionText = "Cistern";
                 break;
             case BlockType.Slum:
                 inactiveColor = ConvertHexaToUnityRGB(175, 239, 230);
                 producedResources.Add(ResourceType.People);
-                descriptionText = "Slum";
                 break;
             case BlockType.School:
                 inactiveColor = ConvertHexaToUnityRGB(237, 175, 175);
                 usedResources.Add(ResourceType.People);
                 producedScience = 1;
-                descriptionText = "School";
                 break;
             case BlockType.GreasySpoon:
                 inactiveColor = ConvertHexaToUnityRGB(173, 201, 234);
                 usedResources.Add(ResourceType.Water);
-                descriptionText = "Greasy Spoon";
                 producedMoney = 1;
                 break;
             case BlockType.Workshop:
                 inactiveColor = ConvertHexaToUnityRGB(60, 85, 114);
                 usedResources.Add(ResourceType.Electricity);
-                descriptionText = "Workshop";
                 producedMoney = 1;
                 break;
             default:
                 inactiveColor = Color.black;
                 break;
         }
+        descriptionText = GetDescription(blockType);
         Vector3 HSVBuffer = Vector3.zero;
         Color.RGBToHSV(inactiveColor, out HSVBuffer.x, out HSVBuffer.y, out HSVBuffer.z);
         HSVBuffer.y = Mathf.Clamp(3f * HSVBuffer.y, 0f, 1f);
@@ -143,5 +138,32 @@ public class Block : MonoBehaviour {
 
     public static Color ConvertHexaToUnityRGB(float r, float g, float b) {
         return new Color(r / 255f, g / 255f, b / 255f);
+    }
+
+    public static string GetDescription(BlockType _blockType) {
+        string text = "";
+        switch (_blockType) {
+            case BlockType.Generator:
+                text = "GENERATOR: Provides Electricity to neighbors";
+                break;
+            case BlockType.Cistern:
+                text = "CISTERN: Provides Water to neighbors";
+                break;
+            case BlockType.Slum:
+                text = "SLUM: Provides People to neighbors";
+                break;
+            case BlockType.School:
+                text = "SCHOOL: Uses People from neighbors to increase the global level";
+                break;
+            case BlockType.GreasySpoon:
+                text = "GREASY SPOON: Uses Water from neighbors to earn HK$";
+                break;
+            case BlockType.Workshop:
+                text = "WORKSHOP: Uses Electricity from neighbors to earn HK$";
+                break;
+            default:
+                break;
+        }
+        return text;
     }
 }
