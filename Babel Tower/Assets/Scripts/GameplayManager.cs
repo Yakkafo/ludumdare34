@@ -26,8 +26,10 @@ public class GameplayManager : MonoBehaviour {
     private const int MAX_PROPOSED_BLOCKS = 3;
 
     // GUI
+    public GUISkin guiSkin;
     public Texture2D[] texturesUnfocusedButtons;
     public Texture2D[] texturesFocusedButtons;
+    public Texture2D textureLabel;
     private Rect topRect;
 
 	void Start () {
@@ -59,8 +61,10 @@ public class GameplayManager : MonoBehaviour {
                         List<Block> neighborhood = tower.GetNeighborhood(spot.id);
                         spot.containedBlock.CheckActivity(neighborhood);
                         if (spot.containedBlock.active) {
-                            Debug.Log(spot.containedBlock.name + " is active.");
                             playerMoney += spot.containedBlock.producedMoney;
+                            if(spot.containedBlock.producedMoney > 0) {
+                                spot.containedBlock.GetComponent<ParticleSystem>().Play();
+                            }
                             totalScience += spot.containedBlock.producedScience;
                         }
                     }
@@ -84,13 +88,19 @@ public class GameplayManager : MonoBehaviour {
     }
 
     void OnGUI() {
+        GUI.skin = guiSkin;
+        Rect labelRect = new Rect(Screen.width / 2 - 100, 10, 200, 60);
+        GUI.Box(labelRect, "Money: " + playerMoney);
+        labelRect.y += 62;
+        GUI.Box(labelRect, "Science: " + playerScience);
         Rect currentButtonRect = new Rect(topRect);
         for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
+            currentButtonRect.y += 70;
             if(i == selectedBlock)
                 GUI.Box(currentButtonRect, texturesFocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
             else
                 GUI.Box(currentButtonRect, texturesUnfocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
-            currentButtonRect.y += 70;
+            
         }
     }
     
