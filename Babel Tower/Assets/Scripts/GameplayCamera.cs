@@ -65,7 +65,7 @@ public class GameplayCamera : MonoBehaviour {
                     transform.RotateAround(target, Vector3.up, -distance);
                 }
                 // Translation verticale de la caméra
-                if (remainingHeigh > 0f) {
+                /*if (remainingHeigh > 0f) {
                     verticalSpeed = Mathf.Lerp(verticalSpeed, MIN_VERTICAL_SPEED, VERTICAL_ACCELERATION * Time.deltaTime);
                     distance = verticalSpeed * Time.deltaTime;
                     if(remainingHeigh - distance < 0) {
@@ -75,9 +75,9 @@ public class GameplayCamera : MonoBehaviour {
                     else
                         remainingHeigh -= distance;
                     //transform.Translate(Vector3.up * distance);
-                }
+                }*/
 
-                if (remainingDegrees <= 0 && remainingHeigh <= 0f)
+                if (remainingDegrees <= 0 /*&& remainingHeigh <= 0f*/)
                     ResetSpeeds();
                 break;
             case CameraState.HoldPosition:

@@ -22,6 +22,17 @@ public class Tower : MonoBehaviour {
 	
 	}
 
+    public bool IsFull() {
+        bool full = true;
+        foreach (Spot spot in towerSpots) {
+            if (spot.containedBlock == null) {
+                full = false;
+                break;
+            }
+        }
+        return full;
+    }
+
     public void CreateNextBlockAtID(int _spotID, Block.BlockType _type) {
         Block block = Instantiate(blockModel, GetGameplayPosition(_spotID), Quaternion.identity) as Block;
         block.ChangeType(_type);
