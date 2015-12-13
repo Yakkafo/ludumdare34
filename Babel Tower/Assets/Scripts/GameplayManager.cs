@@ -33,6 +33,7 @@ public class GameplayManager : MonoBehaviour {
     public GUISkin longTextSkin;
     public GUISkin buttonSkin;
     public GUISkin veryLongTextSkin;
+    public GUISkin signatureSkin;
     public Texture2D[] texturesUnfocusedButtons;
     public Texture2D[] texturesFocusedButtons;
 
@@ -44,7 +45,7 @@ public class GameplayManager : MonoBehaviour {
     void Update() {
         switch (currentGameplaystate) {
             case GameplayState.BlockSelection:
-                if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)) {
+                if (Input.GetKeyDown(KeyCode.UpArrow)) {
                     selectedBlock = (selectedBlock + 1) % MAX_PROPOSED_BLOCKS;
                 }
                 else if (Input.GetKeyDown(KeyCode.Space)) {
@@ -139,7 +140,7 @@ public class GameplayManager : MonoBehaviour {
             }
             GUI.skin = veryLongTextSkin;
             boxRect.height /= 2;
-            GUI.Box(boxRect, "CTRL to select another block");
+            GUI.Box(boxRect, "UP to select another block");
             boxRect.y += boxRect.height + 2;
             GUI.Box(boxRect, "SPACEBAR to build a block");
         } else {
@@ -156,7 +157,7 @@ public class GameplayManager : MonoBehaviour {
             boxRect.height /= 2;
             GUI.Box(boxRect, "SPACEBAR to restart.");
         }
-
+        
     }
     
 }
