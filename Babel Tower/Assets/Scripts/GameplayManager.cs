@@ -29,6 +29,8 @@ public class GameplayManager : MonoBehaviour {
     // GUI
     public GUISkin boxSkin;
     public GUISkin longTextSkin;
+    public GUISkin buttonSkin;
+    public GUISkin veryLongTextSkin;
     public Texture2D[] texturesUnfocusedButtons;
     public Texture2D[] texturesFocusedButtons;
 
@@ -82,9 +84,15 @@ public class GameplayManager : MonoBehaviour {
 
     private void ResetHand() {
         proposedBlocks.Clear();
+        selectedBlock = 0;
         for (int i = 0; i < MAX_PROPOSED_BLOCKS; i++) {
-            int random = Random.Range(0, Block.GetBlockTypeID(Block.BlockType.NumerOfBlockTypes));
-            proposedBlocks.Add((Block.BlockType)random);
+            int random;
+            Block.BlockType block;
+            do {
+                random = Random.Range(0, Block.GetBlockTypeID(Block.BlockType.NumerOfBlockTypes));
+                block = Block.GetBlockType(random);
+            } while (proposedBlocks.Contains(block)) ;
+            proposedBlocks.Add(block);
         }
     }
 
@@ -105,19 +113,26 @@ public class GameplayManager : MonoBehaviour {
         boxRect.width = boxRect.height = buttonSize;
         for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
             if (i == selectedBlock) {
-                GUI.skin = boxSkin;
+                GUI.skin = buttonSkin;
                 GUI.Box(boxRect, texturesFocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
                 boxRect.x += boxRect.width + 2;
                 boxRect.width = 300;
                 GUI.skin = longTextSkin;
                 GUI.Box(boxRect, Block.GetDescription(proposedBlocks[i]));
                 boxRect.width = buttonSize;
-                boxRect.x -= boxRect.width + 2;
+                boxRect.x = margin;
             }
-            else
+            else {
+                GUI.skin = buttonSkin;
                 GUI.Box(boxRect, texturesUnfocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
+            }
             boxRect.y += boxRect.height + 2;
         }
+        GUI.skin = veryLongTextSkin;
+        boxRect.height /= 2;
+        GUI.Box(boxRect, "CTRL to select another block");
+        boxRect.y += boxRect.height + 2;
+        GUI.Box(boxRect, "SPACEBAR to build a block");
     }
     
 }

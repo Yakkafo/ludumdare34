@@ -89,13 +89,13 @@ public class Block : MonoBehaviour {
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = blockMeshes[GetBlockTypeID(blockType)];
         switch (blockType) {
-            case BlockType.Generator:
-                inactiveColor = ConvertHexaToUnityRGB(251, 249, 184);
-                producedResources.Add(ResourceType.Electricity);
-                break;
             case BlockType.Cistern:
                 inactiveColor = ConvertHexaToUnityRGB(215, 180, 240);
                 producedResources.Add(ResourceType.Water);
+                break;
+            case BlockType.Generator:
+                inactiveColor = ConvertHexaToUnityRGB(251, 249, 184);
+                producedResources.Add(ResourceType.Electricity);
                 break;
             case BlockType.Slum:
                 inactiveColor = ConvertHexaToUnityRGB(175, 239, 230);
