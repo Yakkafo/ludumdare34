@@ -23,15 +23,17 @@ public class GameplayCamera : MonoBehaviour {
 
     // Mouvements verticaux
     public float initialHeigh = 0f;
+    private const float HEIGH = 1f; // Ne marche pas
     private const float MAX_VERTICAL_SPEED = 3f;
     private const float MIN_VERTICAL_SPEED = 1.5f;
     private const float VERTICAL_ACCELERATION = 1f;
     private float verticalSpeed = 0f;
     public float remainingHeigh = 0f;
+    public float lastHeigh = 0f;
 
     void Start () {
         initialHeigh = transform.position.y;
-        target = new Vector3(0.5f, initialHeigh, 0.5f);
+        target = new Vector3(0.5f, 0f, 0.5f);
         remainingDegrees = ANGLE;
         ResetSpeeds();
     }
@@ -42,7 +44,8 @@ public class GameplayCamera : MonoBehaviour {
         angularSpeed = MAX_ANGULAR_SPEED;
 
         verticalSpeed = MAX_VERTICAL_SPEED;
-        remainingHeigh = target.y - transform.position.y;
+        remainingHeigh = (target.y - lastHeigh) * HEIGH;
+        lastHeigh = target.y;
     }
 	
 	void Update () {
@@ -71,8 +74,9 @@ public class GameplayCamera : MonoBehaviour {
                     }
                     else
                         remainingHeigh -= distance;
-                    transform.Translate(Vector3.up * distance);
+                    //transform.Translate(Vector3.up * distance);
                 }
+
                 if (remainingDegrees <= 0 && remainingHeigh <= 0f)
                     ResetSpeeds();
                 break;
@@ -82,6 +86,7 @@ public class GameplayCamera : MonoBehaviour {
                 break;
         }
     }
+    
 
     public void MoveToNextTarget() {
         currentState = CameraState.MoveTo;

@@ -25,6 +25,7 @@ public class Tower : MonoBehaviour {
     public void CreateNextBlockAtID(int _spotID, Block.BlockType _type) {
         Block block = Instantiate(blockModel, GetGameplayPosition(_spotID), Quaternion.identity) as Block;
         block.ChangeType(_type);
+        block.gameplayPosition = GetGameplayPosition(_spotID);
         towerSpots[_spotID].containedBlock = block;
         block.name = block.blockType.ToString() + " " + GetGameplayPosition(_spotID).ToString();
     }

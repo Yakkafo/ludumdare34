@@ -31,17 +31,36 @@ public class Block : MonoBehaviour {
     public string descriptionText = "";
     public bool active = false;
     public Mesh[] blockMeshes;
+    private Renderer rend;
+    private Color inactiveColor;
+    private Color activeColor;
+    private Color currentColor;
+    private Vector3 positionShift;
+    public Vector3 gameplayPosition;
+    private float initialTime = 0f;
 
     void Awake () {
         producedResources = new List<ResourceType>();
         usedResources = new List<ResourceType>();
+        rend = GetComponent<Renderer>();
+        positionShift = Vector3.zero;
+        initialTime = Time.time;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        
-	
-	}
+        if (active) {
+            float period = Mathf.Cos(Time.time + initialTime);
+            currentColor = Color.Lerp(inactiveColor, activeColor, Mathf.Abs(period));
+            positionShift.y = Mathf.Cos((initialTime + Time.time) * 10f) * 0.01f;
+            transform.position = gameplayPosition + positionShift;
+        }
+        else {
+            currentColor = inactiveColor;
+            transform.position = gameplayPosition;
+        }
+        rend.material.SetColor("_Color", currentColor);
+    }
 
     public void CheckActivity(List<Block> _neighborhood) {
         bool oneMissing = false;
@@ -67,48 +86,51 @@ public class Block : MonoBehaviour {
 
     public void ChangeType(BlockType _type) {
         blockType = _type;
-        Renderer rend = GetComponent<Renderer>();
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         meshFilter.mesh = blockMeshes[GetBlockTypeID(blockType)];
-        rend.material.shader = Shader.Find("Specular");
         switch (blockType) {
             case BlockType.Generator:
-                rend.material.SetColor("_Color", ConvertHexaToUnityRGB(251, 249, 184));
+                inactiveColor = ConvertHexaToUnityRGB(251, 249, 184);
                 producedResources.Add(ResourceType.Electricity);
                 descriptionText = "Generator";
                 break;
             case BlockType.Cistern:
-                rend.material.SetColor("_Color", ConvertHexaToUnityRGB(215, 180, 240));
+                inactiveColor = ConvertHexaToUnityRGB(215, 180, 240);
                 producedResources.Add(ResourceType.Water);
                 descriptionText = "Cistern";
                 break;
             case BlockType.Slum:
-                rend.material.SetColor("_Color", ConvertHexaToUnityRGB(175, 239, 230));
+                inactiveColor = ConvertHexaToUnityRGB(175, 239, 230);
                 producedResources.Add(ResourceType.People);
                 descriptionText = "Slum";
                 break;
             case BlockType.School:
-                rend.material.SetColor("_Color", ConvertHexaToUnityRGB(237, 175, 175));
+                inactiveColor = ConvertHexaToUnityRGB(237, 175, 175);
                 usedResources.Add(ResourceType.People);
                 producedScience = 1;
                 descriptionText = "School";
                 break;
             case BlockType.GreasySpoon:
-                rend.material.SetColor("_Color", ConvertHexaToUnityRGB(173, 201, 234));
+                inactiveColor = ConvertHexaToUnityRGB(173, 201, 234);
                 usedResources.Add(ResourceType.Water);
-                descriptionText = "GreasySpoon";
+                descriptionText = "Greasy Spoon";
                 producedMoney = 1;
                 break;
             case BlockType.Workshop:
-                rend.material.SetColor("_Color", ConvertHexaToUnityRGB(60, 85, 114));
+                inactiveColor = ConvertHexaToUnityRGB(60, 85, 114);
                 usedResources.Add(ResourceType.Electricity);
                 descriptionText = "Workshop";
                 producedMoney = 1;
                 break;
             default:
-                rend.material.SetColor("_Color", Color.black);
+                inactiveColor = Color.black;
                 break;
         }
+        Vector3 HSVBuffer = Vector3.zero;
+        Color.RGBToHSV(inactiveColor, out HSVBuffer.x, out HSVBuffer.y, out HSVBuffer.z);
+        HSVBuffer.y = Mathf.Clamp(3f * HSVBuffer.y, 0f, 1f);
+        activeColor = Color.HSVToRGB(HSVBuffer.x, HSVBuffer.y, HSVBuffer.z);
+
     }
 
     public static BlockType GetBlockType(int _i) {

@@ -48,13 +48,14 @@ public class GameplayManager : MonoBehaviour {
                     if (gameplayCamera.currentState != GameplayCamera.CameraState.MoveTo) {
                         tower.CreateNextBlockAtID(currentSpotID, proposedBlocks[selectedBlock]);
                         currentSpotID = tower.NextNeighbourID(currentSpotID);
-                        gameplayCamera.target.y = tower.GetGameplayPosition(currentSpotID).y + gameplayCamera.initialHeigh;
+                        if (gameplayCamera.target.y < tower.GetSpot(currentSpotID).gameplayPosition.y)
+                            gameplayCamera.target.y = tower.GetSpot(currentSpotID).gameplayPosition.y; // On met à jour la target de la caméra
                         gameplayCamera.MoveToNextTarget();
                         currentGameplaystate = GameplayState.TurnTransition;
                     }
                 }
                 break;
-            case GameplayState.TurnTransition: // G�n�ration d'une nouvelle main de blocks et calcule des gains
+            case GameplayState.TurnTransition: // Génération d'une nouvelle main de blocks et calcule des gains
                 int totalScience = 0;
                 foreach(Spot spot in tower.towerSpots) {
                     if(spot.containedBlock != null) {
