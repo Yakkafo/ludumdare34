@@ -7,7 +7,6 @@ public class Tower : MonoBehaviour {
     public List<Spot> towerSpots;
     public const int MAX_HEIGHT = 8;
     public Block blockModel;
-    public Mesh[] blockMeshes;
 
 	void Start () {
         towerSpots = new List<Spot>();
@@ -27,7 +26,6 @@ public class Tower : MonoBehaviour {
         Block block = Instantiate(blockModel, GetGameplayPosition(_spotID), Quaternion.identity) as Block;
         block.ChangeType(_type);
         towerSpots[_spotID].containedBlock = block;
-        block.GetComponent<MeshFilter>().mesh = blockMeshes[Random.Range(0, blockMeshes.Length)];
         block.name = block.blockType.ToString() + " " + GetGameplayPosition(_spotID).ToString();
     }
 
