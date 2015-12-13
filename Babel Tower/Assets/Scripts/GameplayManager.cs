@@ -64,7 +64,7 @@ public class GameplayManager : MonoBehaviour {
                         if (spot.containedBlock.active) {
                             playerMoney += spot.containedBlock.producedMoney;
                             if(spot.containedBlock.producedMoney > 0) {
-                                spot.containedBlock.GetComponent<ParticleSystem>().Play();
+                                //spot.containedBlock.GetComponent<ParticleSystem>().Play();
                             }
                             totalScience += spot.containedBlock.producedScience;
                         }
