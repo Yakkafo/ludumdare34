@@ -101,7 +101,7 @@ public class GameplayManager : MonoBehaviour {
             do {
                 random = Random.Range(0, Block.GetBlockTypeID(Block.BlockType.NumerOfBlockTypes));
                 block = Block.GetBlockType(random);
-            } while (proposedBlocks.Contains(block)) ;
+            } while (proposedBlocks.Contains(block) || playerScience < Block.GetNeededLevel(block)) ;
             proposedBlocks.Add(block);
         }
     }
@@ -118,10 +118,17 @@ public class GameplayManager : MonoBehaviour {
         boxRect.width = 150;
         GUI.Box(boxRect, "Level: " + playerScience);
         if (currentGameplaystate != GameplayState.EndGame) {
-            boxRect.x = margin;
             boxRect.y = boxRect.height + 12;
             boxRect.width = boxRect.height = buttonSize;
             for (int i = MAX_PROPOSED_BLOCKS - 1; i >= 0; i--) {
+                if (Block.GetNeededLevel(proposedBlocks[i]) > 0) {
+                    boxRect.x = margin - buttonSize / 3 - 2;
+                    boxRect.width = buttonSize / 3;
+                    GUI.skin = veryLongTextSkin;
+                    GUI.Box(boxRect, "L\nV\nL\n" + Block.GetNeededLevel(proposedBlocks[i]));
+                }
+                boxRect.x = margin;
+                boxRect.width = boxRect.height = buttonSize;
                 if (i == selectedBlock) {
                     GUI.skin = buttonSkin;
                     GUI.Box(boxRect, texturesFocusedButtons[Block.GetBlockTypeID(proposedBlocks[i])]);
@@ -150,12 +157,14 @@ public class GameplayManager : MonoBehaviour {
             boxRect.width = 654;
             boxRect.height = 60;
             GUI.Box(boxRect, "The Kowloon Walled City is finished.");
+            boxRect.y += boxRect.height + 2;
+            GUI.Box(boxRect, "Your score: "+ (int) ((playerScience * playerRevenue) + playerMoney));
             GUI.skin = longTextSkin;
             boxRect.y = Screen.height - boxRect.height - 2;
             boxRect.x += 200;
             boxRect.width -= 400;
             boxRect.height /= 2;
-            GUI.Box(boxRect, "SPACEBAR to restart.");
+            GUI.Box(boxRect, "SPACEBAR to demolish");
         }
         
     }

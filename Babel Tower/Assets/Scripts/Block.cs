@@ -28,6 +28,7 @@ public class Block : MonoBehaviour {
     public List<ResourceType> usedResources;
     public int producedScience = 0;
     public int producedMoney = 0;
+    public int neededLevel = 0;
     public string descriptionText = "";
     public bool active = false;
     public Mesh[] blockMeshes;
@@ -104,22 +105,26 @@ public class Block : MonoBehaviour {
             case BlockType.School:
                 inactiveColor = ConvertHexaToUnityRGB(237, 175, 175);
                 usedResources.Add(ResourceType.People);
+                usedResources.Add(ResourceType.Water);
                 producedScience = 1;
                 break;
             case BlockType.GreasySpoon:
                 inactiveColor = ConvertHexaToUnityRGB(173, 201, 234);
                 usedResources.Add(ResourceType.Water);
+                usedResources.Add(ResourceType.Electricity);
                 producedMoney = 1;
                 break;
             case BlockType.Workshop:
                 inactiveColor = ConvertHexaToUnityRGB(60, 85, 114);
                 usedResources.Add(ResourceType.Electricity);
+                usedResources.Add(ResourceType.People);
                 producedMoney = 1;
                 break;
             default:
                 inactiveColor = Color.black;
                 break;
         }
+        neededLevel = GetNeededLevel(blockType);
         descriptionText = GetDescription(blockType);
         Vector3 HSVBuffer = Vector3.zero;
         Color.RGBToHSV(inactiveColor, out HSVBuffer.x, out HSVBuffer.y, out HSVBuffer.z);
@@ -153,17 +158,30 @@ public class Block : MonoBehaviour {
                 text = "SLUM: Provides People to neighbors";
                 break;
             case BlockType.School:
-                text = "SCHOOL: Uses People from neighbors to increase the global level";
+                text = "KAIFONG: Uses People & Water from neighbors to increase the global level";
                 break;
             case BlockType.GreasySpoon:
-                text = "GREASY SPOON: Uses Water from neighbors to earn HK$";
+                text = "GREASY SPOON: Uses Water & Electricity from neighbors to earn HK$";
                 break;
             case BlockType.Workshop:
-                text = "WORKSHOP: Uses Electricity from neighbors to earn HK$";
+                text = "WORKSHOP: Uses People & Electricity from neighbors to earn HK$";
                 break;
             default:
                 break;
         }
         return text;
+    }
+
+    public static int GetNeededLevel(BlockType _blockType) {
+        switch (_blockType) {
+            case BlockType.Generator:
+                return 2;
+            case BlockType.GreasySpoon:
+                return 4;
+            case BlockType.Workshop:
+                return 4;
+            default:
+                return 0;
+        }
     }
 }
