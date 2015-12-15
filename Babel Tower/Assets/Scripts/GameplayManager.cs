@@ -158,7 +158,7 @@ public class GameplayManager : MonoBehaviour {
             boxRect.height = 60;
             GUI.Box(boxRect, "The Kowloon Walled City is finished.");
             boxRect.y += boxRect.height + 2;
-            GUI.Box(boxRect, "Your score: "+ (int) ((playerScience * playerRevenue) + playerMoney));
+            GUI.Box(boxRect, "Your score: "+ (int) ((Mathf.Max(playerScience, 1) * Mathf.Max(playerRevenue, 1)) + playerMoney));
             GUI.skin = longTextSkin;
             boxRect.y = Screen.height - boxRect.height - 2;
             boxRect.x += 200;
